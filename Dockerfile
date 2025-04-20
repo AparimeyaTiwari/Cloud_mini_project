@@ -1,33 +1,23 @@
+# Use a lightweight Python image
 FROM python:3.8-slim
 
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements.txt into the container
-COPY requirements.txt .
-
-# Install Python dependencies
+# Copy and install dependencies
+COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app.py into the container
+# Copy all necessary files and folders
 COPY app.py .
-
-# Copy the util/ directory into the container
-COPY util/ ./util/
-
-# Copy the pages/ directory into the container
-COPY pages/ ./pages/
-
-# Copy the data_util.py file into the container
-COPY data_util.py .
-
-# Copy the data.csv file into the container
 COPY data.csv .
-
-# Copy the models/ directory into the container
+COPY data_util.py .
+COPY pages/ ./pages/
+COPY util/ ./util/
 COPY models/ ./models/
 
-# Expose port 8501 for Streamlit
+# Expose the port Streamlit uses
 EXPOSE 8501
 
-# Start the Streamlit app
+# Run the Streamlit app
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
